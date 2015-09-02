@@ -1,7 +1,22 @@
 
 .figure-box {
-    display: inline;
-    margin: 5px 16px 0 0;
-    float: left;
-    clear: left;
+
+
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin: 12px 0;
+    background-color: #f9f9f9;
+    font-size: 80%;
+    line-height: normal;
 }
+
+.figure-img {
+    border: 1px solid #d3d3d3;
+    background-color: #ffffff;
+    padding: 3px;
+}
+
+.figure-title {
+    font-weight: bold;
+}
+

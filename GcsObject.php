@@ -8,14 +8,15 @@
 
 require_once 'external/google-api-php-client/src/Google/autoload.php';
 
-class GcsObject
+class Mbinfo_GcsObject
 {
     protected $client;
     protected $storageService;
     const BUCKET = 'mbi-figure';
+    const PREFIX = 'figure/';
 
     /**
-     * GcsObject constructor.
+     * Mbinfo_GcsObject constructor.
      */
     public function __construct()
     {
@@ -26,7 +27,8 @@ class GcsObject
     }
 
     /**
-     * Get object meta data.
+     * Get object meta data. MetaData has the followign fields:
+     * 'author', 'created', 'description', 'title'
      * @param $obj_key
      * @return mixed
      */
@@ -35,8 +37,19 @@ class GcsObject
         return $object->getMetadata();
     }
 
-    public function getAmount()
-    {
-        return '10';
+    /**
+     * @param array $optParams optional pageToken.
+     * @return array of 'items' and 'pageToken'
+     */
+    public function listObjects($optParams) {
+        $params = ['prefix' => self::PREFIX];
+        if (!empty($optParams['pageToken'])) {
+            $params['pageToken'] = $optParams['pageToken'];
+        }
+        if (!empty($optParams['maxResults'])) {
+            $params['maxResults'] = $optParams['maxResults'];
+        }
+        $list = $this->storageService->objects->listObjects(self::BUCKET, $params);
+        return ['items' => $list->getItems(), 'pageToken' => $list->getNextPageToken()];
     }
 }
