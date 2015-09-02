@@ -24,6 +24,11 @@ class MBInfoFigureTest extends \PHPUnit_Framework_TestCase
 
         $count = $wpdb->get_var('SELECT count(*) FROM ' . $mbinfo->table_name);
         $this->assertEquals(4, $count);
+
+        $id = '1379301497033.jpg';
+        $meta = $mbinfo->get_meta_data($id);
+        $this->assertEquals('1379301497033.jpg', $id);
+        $this->assertEquals('Kinesin schematic', $meta->title);
     }
 
 

@@ -95,4 +95,16 @@ class Mbinfo {
         }
     }
 
+
+    /**
+     * Get meta data of an figure id from the database.
+     * @param string $id
+     * @return object
+     */
+    function get_meta_data($id) {
+        global $wpdb;
+        return $wpdb->get_row($wpdb->prepare(
+            'SELECT * FROM ' . $this->table_name . ' WHERE id = %s', $id));
+    }
+
 }

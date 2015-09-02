@@ -18,11 +18,11 @@ class Mbinfo_GcsObject
     /**
      * Mbinfo_GcsObject constructor.
      */
-    public function __construct()
+    public function __construct($gapi_key)
     {
         $this->client = new Google_Client();
         $this->client->setApplicationName("MBInfoFigurePlugin");
-        $this->client->setDeveloperKey("AIzaSyDj04_XpKvJbXm5SNVCZvyBnia7jwvY_6w");
+        $this->client->setDeveloperKey($gapi_key);
         $this->storageService = new Google_Service_Storage($this->client);
     }
 
