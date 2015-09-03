@@ -117,16 +117,21 @@ class Mbinfo {
     {
         $copying = 'Modification, copying and distribution (commercial or non-commercial) of this image is strictly prohibited without written consent. Please contact MBInfo at <b>feedback@mechanobio.info</b> to request permission to use this image.';
         $title = 'Adherens junctions of hepatocytes';
-        $desc = 'Hepatocyte cells plated on collagen and stained the next day to image newly formed cell-cell contacts. F-actin (green), β-catenin (red), cadherin (dark blue), nuclei (cyan). The overlap of β-catenin and cadherin seen as magenta represents adherens junctions that have formed between apposing cells. These cells were imaged using a Nikon A1Rsi confocal microscope at 100x magnification. [Image captured by Jeffrey Robens, Mechanobiology Institute, Singapore].';
 
-        $id = '1384242402205.jpg';
+        $created = $attr['created'];
+
+        $id = $attr['id'];
+        $has_ext = preg_match("/\.\w{2,4}$/", $id);
+        if (!$has_ext) {
+            $id = $id . '.jpg';
+        }
         $bucket = Mbinfo_GcsObject::BUCKET;
         $prefix = '/figure/';
         $key = $prefix . $id;
         $image_origin = '//' . $bucket . '.storage.googleapis.com';
         $img_src = $image_origin . $key;
 
-        return '<section class="figure" id="section-figure"><div class="copyrighted-figure"><h2>' .$title . '</h2><img src="' . $img_src .'"/><h3>Summary</h3><table cellpadding="2" class="figure-table"><tbody><tr><td>Title</td><td name="title">' . $title . '</td></tr><tr><td>Description</td><td name="description">' . $desc . '</td></tr><tr><td>Date</td><td name="created">2012</td></tr><tr><td>Author</td><td name="author"></td></tr><tr><td>Permission</td><td>' . $copying . '</td></tr></tbody></table><div class="citation-box"><details><summary>How to cite this page?</summary><div class="citation"><span class="author">MBInfo contributors.</span> <span class="title">Adherens junctions of hepatocytes. </span>In <span class="journal-title">MBInfo Wiki</span>, Retrieved 10/21/2014 from http://www.mechanobio.info/figure/figure/1384242402205.jpg.html</div></details></div></div></section>';
+        return '<section class="figure" id="section-figure"><div class="copyrighted-figure"><h2>' .$title . '</h2><img src="' . $img_src .'"/><h3>Summary</h3><table cellpadding="2" class="figure-table"><tbody><tr><td>Title</td><td name="title">' . $title . '</td></tr><tr><td>Description</td><td name="description">' . $content . '</td></tr><tr><td>Date</td><td name="created">' . $created . '</td></tr><tr><td>Permission</td><td>' . $copying . '</td></tr></tbody></table><div class="citation-box"><details><summary>How to cite this page?</summary><div class="citation"><span class="author">MBInfo contributors.</span> <span class="title">Adherens junctions of hepatocytes. </span>In <span class="journal-title">MBInfo Wiki</span>, Retrieved 10/21/2014 from http://www.mechanobio.info/figure/figure/1384242402205.jpg.html</div></details></div></div></section>';
     }
 
 }
