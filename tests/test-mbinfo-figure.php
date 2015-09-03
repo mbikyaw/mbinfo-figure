@@ -12,7 +12,7 @@ require_once dirname( __FILE__ ) . '/../mbinfo.php';
 
 class MBInfoFigureTest extends \PHPUnit_Framework_TestCase
 {
-    public function testPopulate() {
+    public function _testPopulate() {
         global $wpdb;
         global $MBINFO_TEST_DATA;
 

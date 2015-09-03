@@ -15,6 +15,6 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 require $_tests_dir . '/includes/bootstrap.php';
 
 global $MBINFO_TEST_DATA;
-$json = file_get_contents(dirname( __FILE__ ) . "/test-data.json");
+$json = file_get_contents(dirname( __FILE__ ) . "/../credentials.json");
 $MBINFO_TEST_DATA = json_decode($json);
 

@@ -12,6 +12,7 @@ class Mbinfo_GcsObject
 {
     protected $client;
     protected $storageService;
+    public $maxResults = '1000';
     const BUCKET = 'mbi-figure';
     const PREFIX = 'figure/';
 
@@ -43,14 +44,21 @@ class Mbinfo_GcsObject
      * @return array of 'items' and 'pageToken'
      */
     public function listObjects($optParams) {
-        $params = ['prefix' => self::PREFIX];
+        $params = ['prefix' => self::PREFIX, 'maxResults' => $this->maxResults];
         if (!empty($optParams['pageToken'])) {
             $params['pageToken'] = $optParams['pageToken'];
         }
-        if (!empty($optParams['maxResults'])) {
-            $params['maxResults'] = $optParams['maxResults'];
-        }
         $list = $this->storageService->objects->listObjects(self::BUCKET, $params);
         return ['items' => $list->getItems(), 'pageToken' => $list->getNextPageToken()];
+    }
+
+
+    /**
+     * @param string $name GCS object name
+     * @return string figure post name.
+     */
+    static public function idFromName($name) {
+        $id = substr($name, strlen(Mbinfo_GcsObject::PREFIX));
+        return preg_replace("/\.\w{2,4}$/", '', $id);
     }
 }

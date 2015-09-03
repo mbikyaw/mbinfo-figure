@@ -17,7 +17,7 @@ Setup your WP plugin test system by running
 
     bash bin/install-wp-test.sh
     
-Create a file with name `test-data.json` under tests folder withing following
+Create a file with name `credentials.json` withing following
     
     {
       "mbinfoFigureGapiKey": "xxx"

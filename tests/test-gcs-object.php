@@ -22,7 +22,8 @@ class GcsObjectTest extends \PHPUnit_Framework_TestCase
     public function testListObject() {
         global $MBINFO_TEST_DATA;
         $obj = new \Mbinfo_GcsObject($MBINFO_TEST_DATA->mbinfoFigureGapiKey);
-        $out = $obj->listObjects(['maxResults' => 2]);
+        $obj->maxResults = 2;
+        $out = $obj->listObjects([]);
         $items = $out['items'];
         // var_dump($items);
         $this->assertEquals(2, count($items));
@@ -30,7 +31,7 @@ class GcsObjectTest extends \PHPUnit_Framework_TestCase
         $first_id = $items[0]['name'];
         $this->assertNotEmpty($first_id);
 
-        $out2 = $obj->listObjects(['maxResults' => 2, 'pageToken' => $out['pageToken']]);
+        $out2 = $obj->listObjects(['pageToken' => $out['pageToken']]);
         $items = $out2['items'];
         $this->assertEquals(2, count($items));
         $first_id_2 = $items[0]['name'];
