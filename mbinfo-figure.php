@@ -18,8 +18,6 @@ require_once 'mbinfo.php';
 register_activation_hook(__FILE__, 'mbinfo_figure_install');
 add_action( 'wp_enqueue_scripts', 'mbinfo_figure_enqueue_scripts' );
 
-global $mbinfo_figure_db_version;
-$mbinfo_figure_db_version = '1.0';
 
 
 /**
@@ -38,7 +36,7 @@ function mbinfo_figure_install() {
     $existing = get_site_option( 'mbinfo_figure_db_version' );
     error_log('MBInfoFigure: running mbinfo_figure_install ' . $existing . ' to ' . $mbinfo_figure_db_version);
     if ( $existing != $mbinfo_figure_db_version ) {
-        $mbinfo->update_to_v1();
+        $mbinfo->update_to_v11();
         update_option( 'mbinfo_figure_db_version', $mbinfo_figure_db_version );
     }
     populate_data();
@@ -96,4 +94,16 @@ function mbinfo_figure_box($attr, $content)
     }
 
     return make_figure_box($id, $meta->title, $meta->description);
+}
+
+
+/**
+ * Register a new shortcode: [figure-copyright]
+ */
+add_shortcode('figure-copyright', 'mbinfo_figure_copyright');
+// The callback function that will replace [book]
+function mbinfo_figure_copyright($attr, $content)
+{
+    $mbinfo = new Mbinfo();
+    return $mbinfo->render_figure_copyright($attr, $content);
 }

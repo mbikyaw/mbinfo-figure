@@ -17,6 +17,7 @@ class Mbinfo_GcsObject
 
     /**
      * Mbinfo_GcsObject constructor.
+     * @param $gapi_key
      */
     public function __construct($gapi_key)
     {

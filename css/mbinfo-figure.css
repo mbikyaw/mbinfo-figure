@@ -20,3 +20,34 @@
     font-weight: bold;
 }
 
+table.figure-table {
+    background: Beige;
+    border: thin solid grey;
+    margin: 1em;
+    padding: 4px;
+
+    display: table;
+    border-collapse: separate;
+    border-spacing: 2px;
+}
+
+.figure-table tr td:first-child {
+    background: #deb887;
+    text-align: right;
+    vertical-align: top;
+    padding-right: 0.4em;
+    width: 15%;
+    font-weight: bold;
+}
+
+.figure-table tr td:last-child {
+    display: table-cell;
+    vertical-align: inherit;
+}
+
+section.figure {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.428571429;
+}
