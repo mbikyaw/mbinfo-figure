@@ -53,7 +53,8 @@ function make_figure_box($id, $title, $desc)
     $key = $prefix . $id;
     $image_origin = '//' . $bucket . '.storage.googleapis.com';
     $src = $image_origin . $key;
-    $figure_url = '/figure/' . $id . '.html';
+    $name = Mbinfo_GcsObject::idFromName($key);
+    $figure_url = '/figure/' . $name . '/';
 
     $box_style = 'display: inline; margin: 5px 16px 0 0; float: left; clear: left;';
     return '<div class="figure-box" style="' . $box_style . '"><a href="' . $figure_url . '"><img border="0" src="' . $src . '" width="200" class="figure-img"></a><span style="display: block; width: 200px;"><span class="figure-title">Figure. ' . $title . '</span><span class="description">: ' . $desc . '</span></span></div>';
@@ -61,17 +62,17 @@ function make_figure_box($id, $title, $desc)
 
 
 /**
- * Register a new shortcode: [figure-box id="123"]
+ * Register a new shortcode: [figure-box name="123"]
  */
 add_shortcode('figure-box', 'mbinfo_figure_box');
 // The callback function that will replace [book]
 function mbinfo_figure_box($attr, $content)
 {
 
-    if (! isset($attr['id'])) {
-        return 'Error: "id" attribute required in figure-box shortcode.';
+    if (! isset($attr['name'])) {
+        return '<div class="wpcf7-validation-errors">Error: "name" attribute required in figure-box shortcode.</div>';
     }
-    $id = esc_attr($attr['id']);
+    $id = esc_attr($attr['name']);
     $has_ext = preg_match("/\.\w{2,4}$/", $id);
     if (!$has_ext) {
         $id = $id . '.jpg'; // append default extension

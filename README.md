@@ -1,6 +1,6 @@
 # mbinfo-figure
 
-Figure box for MBInfo Wordpress site
+Insert figure to MBInfo WordPress site.
 
 Figure images are stored in Google Cloud Storage bucket.
 
@@ -10,6 +10,11 @@ Set Google API Server key for MBInfo Figure plugin by using WP-CLI
 
     wp option mbinfo-figure-gapi-key 'xxxx'
     
+## Management
+    
+Use command line runner to manage images and maintenance. For detail, check out:
+    
+    wp help mbi-figure
     
 ## Testing
 
