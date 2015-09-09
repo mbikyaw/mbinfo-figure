@@ -77,8 +77,6 @@
                 request.execute(function(resp) {
                     console.log(resp);
                 });
-                //Store the name of the inserted object
-                object = fileData.name;
             }
             catch(e) {
                 alert('An error has occurred: ' + e.message);
@@ -94,6 +92,7 @@
         if (authResult && !authResult.error) {
             authorizeButton.style.visibility = 'hidden';
             initializeApi();
+            var filePicker = document.getElementById('filePicker');
             filePicker.onchange = insertObject;
         } else {
             authorizeButton.style.visibility = '';
@@ -134,6 +133,9 @@
         btn.style.visibility = 'hidden';
         btn.textContent = 'Authorize';
         root.appendChild(btn);
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.id = 'filePicker';
         gapi.client.setApiKey(apiKey);
         window.setTimeout(checkAuth, 1);
     }, false);

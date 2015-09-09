@@ -46,7 +46,7 @@ function mbinfo_figure_enqueue_scripts() {
 }
 
 
-function make_figure_box($id, $title, $desc)
+function make_figure_box($id, $title, $desc, $size, $float)
 {
     $bucket = Mbinfo_GcsObject::BUCKET;
     $prefix = '/figure/';
@@ -56,8 +56,22 @@ function make_figure_box($id, $title, $desc)
     $name = Mbinfo_GcsObject::idFromName($key);
     $figure_url = '/figure/' . $name . '/';
 
-    $box_style = 'display: inline; margin: 5px 16px 0 0; float: left; clear: left;';
-    return '<div class="figure-box" style="' . $box_style . '"><a href="' . $figure_url . '"><img border="0" src="' . $src . '" width="200" class="figure-img"></a><span style="display: block; width: 200px;"><span class="figure-title">Figure. ' . $title . '</span><span class="description">: ' . $desc . '</span></span></div>';
+    $width = $size == 'large' ? '600px' : $size == 'medium' ? '400px' : '200px';
+    if ($float == 'left') {
+        $float = 'margin: 5px 16px 0 0; float: left;';
+    } else if ($float == 'right') {
+        $float = 'margin: 5px 0 0 16px; float: right;';
+    } else {
+        $float = '';
+    }
+
+    $box_style = 'display: inline; ' . $float . 'clear: left;';
+    return '<div class="figure-box" style="' . $box_style . '"><a href="' . $figure_url . '"><img border="0" src="' . $src . '" width="' . $width . '" class="figure-img"></a><span style="display: block; width: ' . $width . ';"><span class="figure-title">Figure. ' . $title . '</span><span class="description">: ' . $desc . '</span></span></div>';
+}
+
+
+function mbinfo_figure_error_box($msg) {
+    return '<div class="wpcf7-validation-errors">' . $msg . '</div>';
 }
 
 
@@ -70,7 +84,7 @@ function mbinfo_figure_box($attr, $content)
 {
 
     if (! isset($attr['name'])) {
-        return '<div class="wpcf7-validation-errors">Error: "name" attribute required in figure-box shortcode.</div>';
+        return mbinfo_figure_error_box('Error: "name" attribute required in figure-box shortcode.');
     }
     $id = esc_attr($attr['name']);
     $has_ext = preg_match("/\.\w{2,4}$/", $id);
@@ -78,11 +92,11 @@ function mbinfo_figure_box($attr, $content)
         $id = $id . '.jpg'; // append default extension
     }
 
-    $size = 'medium';
+    $size = 'small';
     if (isset($attr['size'])) {
         $size = esc_attr($attr['size']);
-        if (! in_array(array('small', 'medium', 'large'), $size)) {
-            return 'Error: Invalid "size" attribute "' . $size . '"" in figure-box shortcode.';
+        if (! in_array($size, array('small', 'medium', 'large'))) {
+            return mbinfo_figure_error_box('Error: Invalid "size" attribute "' . $size . '"" in figure-box shortcode.');
         }
     }
 
@@ -91,8 +105,15 @@ function mbinfo_figure_box($attr, $content)
     if (empty($meta)) {
         return 'Error: Figure "' . $id . '"" not found';
     }
+    $float = 'left';
+    if (isset($attr['float'])) {
+        $float = $attr['float'];
+        if (! in_array($float, array('left', 'right'))) {
+            return mbinfo_figure_error_box('Error: Invalid "size" attribute "' . $float . '"" in figure-box shortcode.');
+        }
+    }
 
-    return make_figure_box($id, $meta->title, $meta->description);
+    return make_figure_box($id, $meta->title, $meta->description, $size, $float);
 }
 
 if( defined( 'WP_CLI' ) && WP_CLI ) {
