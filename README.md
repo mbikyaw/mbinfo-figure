@@ -10,7 +10,16 @@ Use WordPress shortcode `mbinfo-figure` to display figure in box.
 
 For example:
 
-    [mbinfo-figure name="actin"] This is main text. Figure box will be the left.
+    [mbinfo-figure name="actin"] This is main text. Figure box will be the left. Figure title and description will be taken from the figure page.
+    
+    
+Displaying figure on right:
+    
+    [mbinfo-figure name="actin" position="right"] This is main text. Figure box will be the right.
+    
+Change figure description:
+    
+    [mbinfo-figure name="actin"]Use this description instead.[/mbinfo-figure]
 
 Require attribute:
 
