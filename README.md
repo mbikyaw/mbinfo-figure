@@ -1,6 +1,6 @@
-# mbinfo-figure
+# mbinfo-figure WordPress plugin
 
-Insert figure to MBInfo WordPress site.
+Insert figure box to MBInfo WordPress site.
 
 Figure images are stored in Google Cloud Storage bucket.
 
