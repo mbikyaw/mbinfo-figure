@@ -21,6 +21,8 @@ Optional attribute
 * position - valid values are 'left' (default), 'right' and 'center'.
 * size - valid values are 'small' (default), 'medium', 'large' and 'original'. 
 
+To upload a new figure, create a figure page in WordPress and publish. View the newly created figure page, you should see upload button on the page. If you are not login to Google account, you will see Authorize button.
+
 ## Setup
 
 Set Google API Server key for MBInfo Figure plugin by using WP-CLI
