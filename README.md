@@ -4,15 +4,39 @@ Insert figure to MBInfo WordPress site.
 
 Figure images are stored in Google Cloud Storage bucket.
 
+## Using 
+
+Use WordPress shortcode `mbinfo-figure` to display figure in box.
+
+For example:
+
+    [mbinfo-figure name="actin"] This is main text. Figure box will be the left.
+
+Require attribute:
+
+* name - figure page name
+
+Optional attribute
+
+* position - valid values are 'left' (default), 'right' and 'center'.
+* size - valid values are 'small' (default), 'medium', 'large' and 'original'. 
+
 ## Setup
 
 Set Google API Server key for MBInfo Figure plugin by using WP-CLI
 
-    wp option mbinfo-figure-gapi-key 'xxxx'
+    wp option set mbinfo-figure-gapi-key 'xxxx'
     
 ## Management
     
-Use command line runner to manage images and maintenance. For detail, check out:
+Use command line runner to manage images and maintenance. 
+
+Loading image meta data from GCS to wordpress
+
+
+    wp mbi-figure load
+
+For detail, check out:
     
     wp help mbi-figure
     

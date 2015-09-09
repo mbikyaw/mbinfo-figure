@@ -142,7 +142,7 @@ class Mbinfo {
         $fig = $wpdb->get_row($wpdb->prepare( "SELECT * FROM $wpdb->posts  WHERE post_name = %s", $id));
         $meta = $item->getMetadata();
         if (empty($fig)) {
-            if ($options['create']) {
+            if (isset($options['create'])) {
                 $post = [
                     'post_content' => $meta['description'],
                     'post_name' => $id,

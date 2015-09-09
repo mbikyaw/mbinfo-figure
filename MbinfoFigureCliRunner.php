@@ -71,7 +71,6 @@ class MbinfoFigureCliRunner extends WP_CLI_Command
      * @synopsis [--create]
      */
     function load( $args, $assoc_args ) {
-        $create = $assoc_args['create'];
 
         global $MBINFO_TEST_DATA;
         $gcs = new \Mbinfo_GcsObject($MBINFO_TEST_DATA->mbinfoFigureGapiKey);
@@ -86,7 +85,7 @@ class MbinfoFigureCliRunner extends WP_CLI_Command
         $count = 0;
         $created = 0;
         foreach($items as $item) {
-            $ok = $mbinfo->check_item_in_db($item, ['create' => $create]);
+            $ok = $mbinfo->check_item_in_db($item, ['create' => true]);
             if ($ok == 'created') {
                 $created++;
             } else if ($ok == 'ok') {
