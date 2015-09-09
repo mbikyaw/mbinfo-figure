@@ -7,17 +7,21 @@
     var PROJECT = 'mechanobio.info:api-project-811363880127';
     var clientId = '811363880127-k99foe5pasqmd9oa6sb592lqqpqqugua.apps.googleusercontent.com';
     var apiKey = 'AIzaSyCiXLTDz-qSBuVTo4WjOp2FSUOirTzsBkw';
-    var scopes = 'https://www.googleapis.com/auth/devstorage.full_control';
+    var scopes = 'https://www.googleapis.com/auth/devstorage.read_write';
     var API_VERSION = 'v1';
     var BUCKET = 'mbi-figure';
-    var PREFIX = 'test/';
+    var PREFIX = 'figure/';
 
     function getUploadFileName(fn) {
-        var m = location.pathname.match(/\/(\w+)\/$/);
+        var m = location.pathname.match(/\/([^\/]+)\/$/);
         if (m) {
             return m[1] + '.jpg';
         } else {
-            return prompt('Enter file name: ', fn);
+            var out = prompt('Enter file name: ', fn);
+            if (!out) {
+                throw new Error('Cancel');
+            }
+            return out;
         }
     }
 
@@ -33,20 +37,23 @@
             filePicker.style.display = 'block';
             return;
         }
-        if (/\.jpg$/.test(fileData.name)) {
-            alert('Image file name must end with .jpg');
+        if (!/\.jpg$/.test(fileData.name)) {
+            alert('Image file name must end with .jpg, but "' + fileData.name + '" found.');
             return;
         }
-        var file_name = getUploadFileName(fileData.name);
+        var file_name = PREFIX + getUploadFileName(fileData.name);
+        var message = document.getElementById('message');
+        message.textContent = 'Reading ' + fileData.name;
         var boundary = '-------314159265358979323846';
         var delimiter = "\r\n--" + boundary + "\r\n";
         var close_delim = "\r\n--" + boundary + "--";
         var reader = new FileReader();
         reader.readAsBinaryString(fileData);
+        message.textContent = 'Uploading to ' + file_name + ' ...';
         reader.onload = function(e) {
             var contentType = fileData.type || 'application/octet-stream';
             var metadata = {
-                'name': PREFIX + fileData.name,
+                'name': file_name,
                 'mimeType': contentType
             };
             var base64Data = btoa(reader.result);
@@ -76,6 +83,11 @@
                 //Execute the insert object request
                 request.execute(function(resp) {
                     console.log(resp);
+                    message.textContent = 'Uploaded to ' + resp.name;
+                    var img = document.querySelector('.copyrighted-figure img');
+                    if (img) {
+                        img.src = '//' + BUCKET + '.storage.googleapis.com/' + resp.name;
+                    }
                 });
             }
             catch(e) {
@@ -90,12 +102,12 @@
     function handleAuthResult(authResult) {
         var authorizeButton = document.getElementById('authorize-button');
         if (authResult && !authResult.error) {
-            authorizeButton.style.visibility = 'hidden';
+            authorizeButton.style.display = 'none';
             initializeApi();
             var filePicker = document.getElementById('filePicker');
             filePicker.onchange = insertObject;
         } else {
-            authorizeButton.style.visibility = '';
+            authorizeButton.style.display = '';
             authorizeButton.onclick = handleAuthClick;
         }
     }
@@ -127,16 +139,23 @@
     }
 
     window.addEventListener('load', function() {
-        var root = document.body;
+        gapi.client.setApiKey(apiKey);
+
+        var root = document.getElementById('uploader-root') || document.body;
         var btn = document.createElement('button');
         btn.id = 'authorize-button';
-        btn.style.visibility = 'hidden';
+        btn.style.display = 'hidden';
         btn.textContent = 'Authorize';
         root.appendChild(btn);
         var input = document.createElement('input');
         input.type = 'file';
         input.id = 'filePicker';
-        gapi.client.setApiKey(apiKey);
+        input.setAttribute('accept', '.jpg');
+        root.appendChild(input);
+        var div = document.createElement('span');
+        div.id = 'message';
+        root.appendChild(div);
+
         window.setTimeout(checkAuth, 1);
     }, false);
 }());
