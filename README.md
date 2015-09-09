@@ -45,11 +45,11 @@ Use command line runner to manage images and maintenance.
 Loading image meta data from GCS to wordpress
 
 
-    wp mbi-figure load
+    wp mbinfo-figure load
 
 For detail, check out:
     
-    wp help mbi-figure
+    wp help mbinfo-figure
     
 ## Testing
 
