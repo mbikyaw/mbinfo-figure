@@ -131,16 +131,20 @@ class MbinfoFigureCliRunner extends WP_CLI_Command
      * <dry-run>
      * : Dry run instead of actual deleting figure pages.
      *
+     * <purge-all>
+     * : Purge all figure pages.
+     *
      * ## EXAMPLES
      *
      *     wp mbi-figure clean
      *
-     * @synopsis [--dry-run]
+     * @synopsis [--dry-run] [--purge-all]
      */
     function clean( $args, $assoc_args ) {
         global $wpdb;
         global $MBINFO_TEST_DATA;
         $dry_run = $assoc_args['dry-run'];
+        $purge_all = $assoc_args['purge-all'];
         $gcs = new \Mbinfo_GcsObject($MBINFO_TEST_DATA->mbinfoFigureGapiKey);
         $gcs->maxResults = '1000';
         $out = $gcs->listObjects([]);
@@ -160,7 +164,11 @@ class MbinfoFigureCliRunner extends WP_CLI_Command
         foreach ($figures as $fig) {
             $name = $fig['post_name'];
             $id = $fig['id'];
-            if (!in_array($name, $ids)) {
+            if ($purge_all) {
+                WP_CLI::line( "Deleting figure $id: $name " );
+                wp_delete_post($id);
+                $deleted++;
+            } else if (!in_array($name, $ids)) {
                 if ($dry_run) {
                     WP_CLI::line( "To delete figure $id: $name " );
                 } else {

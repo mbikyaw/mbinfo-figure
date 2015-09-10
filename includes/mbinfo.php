@@ -137,7 +137,11 @@ class Mbinfo {
         $image_origin = '//' . $bucket . '.storage.googleapis.com';
         $img_src = $image_origin . $key;
 
-        return '<section class="figure" id="section-figure"><div class="copyrighted-figure"><img src="' . $img_src .'"/><h3>Summary</h3><table cellpadding="2" class="figure-table"><tbody><tr><td>Title</td><td name="title">' . $title . '</td></tr><tr><td>Description</td><td name="description">' . $content . '</td></tr><tr><td>Date</td><td name="created">' . $created . '</td></tr><tr><td>Permission</td><td>' . $copying . '</td></tr></tbody></table><div class="citation-box"><details><summary>How to cite this page?</summary><div class="citation"><span class="author">MBInfo contributors.</span> <span class="title">Adherens junctions of hepatocytes. </span>In <span class="journal-title">MBInfo Wiki</span>, Retrieved 10/21/2014 from http://www.mechanobio.info/figure/figure/1384242402205.jpg.html</div></details></div></div></section>';
+        return '<section class="figure" id="section-figure"><div class="copyrighted-figure"><img src="' . $img_src .'"/><h3>Summary</h3><table cellpadding="2" class="figure-table"><tbody><tr><td>Title</td><td name="title">' . $title . '</td></tr>
+        <tr><td>Description</td><td name="description">' . $content . '</td></tr>
+        <tr><td>Date</td><td name="created">' . $created . '</td></tr>
+        <tr><td>Permission</td><td>' . $copying . '</td>
+        </tr></tbody></table><div class="citation-box"><details><summary>How to cite this page?</summary><div class="citation"><span class="author">MBInfo contributors.</span> <span class="title">Adherens junctions of hepatocytes. </span>In <span class="journal-title">MBInfo Wiki</span>, Retrieved 10/21/2014 from http://www.mechanobio.info/figure/figure/1384242402205.jpg.html</div></details></div></div></section>';
     }
 
 
@@ -149,10 +153,13 @@ class Mbinfo {
     static public function insert_figure_from_gcs($item) {
         $meta = $item->getMetadata();
         $name = Mbinfo_GcsObject::idFromName($item['name']);
+        if (empty($meta)) {
+            $meta = ['title' => $name];
+        }
         $post = [
-            'post_content' => $meta['description'],
+            'post_content' => array_key_exists('description', $meta) ? $meta['description'] : '',
             'post_name' => $name,
-            'post_title' => $meta['title'],
+            'post_title' => array_key_exists('title', $meta) ? $meta['title'] : '',
             'post_status' => 'publish',
             'post_type' => 'figure'
         ];
@@ -161,39 +168,12 @@ class Mbinfo {
             var_dump($id);
             return '';
         } else {
-            update_post_meta( $id, '_my_meta_value_key', $my_data );
+            if (array_key_exists('created', $meta)) {
+                update_post_meta( $id, self::$ATTR_DATE, $meta['created'] );
+            }
         }
         return $id;
 
-    }
-
-    function check_item_in_db($item, $options) {
-        global $wpdb;
-
-        $id = Mbinfo_GcsObject::idFromName($item['name']);
-
-        $fig = $wpdb->get_row($wpdb->prepare( "SELECT * FROM $wpdb->posts  WHERE post_name = %s", $id));
-        $meta = $item->getMetadata();
-        if (empty($fig)) {
-            if (isset($options['create'])) {
-                $post = [
-                    'post_content' => $meta['description'],
-                    'post_name' => $id,
-                    'post_title' => $meta['title'],
-                    'post_status' => 'publish',
-                    'post_type' => 'figure'
-                ];
-                $id = wp_insert_post($post, true);
-                if (is_wp_error($id)) {
-                    var_dump($id);
-                    return 'error creating ' . $id;
-                }
-                return 'created';
-            } else {
-                return 'not found';
-            }
-        }
-        return 'ok';
     }
 
 }

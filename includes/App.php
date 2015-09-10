@@ -9,6 +9,6 @@
 require_once 'GcsObject.php';
 
 $gcs = new Mbinfo_GcsObject();
-$meta = $gcs->getMetaData('figure/1390276498094.jpg');
+$meta = $gcs->getMetaData('figure/1384241461724.jpg');
 var_dump($meta);
 echo $meta['description'];
