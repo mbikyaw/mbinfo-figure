@@ -7,7 +7,7 @@
  */
 
 
-require_once dirname( __FILE__ ) . '/../GcsObject.php';
+require_once dirname(__FILE__) . '/../GcsObject.php';
 
 
 class GcsObjectTest extends \PHPUnit_Framework_TestCase

@@ -20,6 +20,7 @@ class Mbinfo {
      */
     public $max_call = 10;
     public $max_result = '1000';
+    public static $ATTR_DATE = 'mbinfo_figure_meta_date';
 
     /**
      * Mbinfo constructor.
@@ -104,13 +105,18 @@ class Mbinfo {
 
     /**
      * Get meta data of an figure id from the database.
-     * @param string $id
+     * @param string $name figure page name (slug)
      * @return object
      */
-    function get_meta_data($id) {
+    static function get_figure($name) {
         global $wpdb;
-        return $wpdb->get_row($wpdb->prepare(
-            'SELECT * FROM ' . $this->table_name . ' WHERE id = %s', $id));
+        $sql = $wpdb->prepare("SELECT * FROM $wpdb->posts WHERE post_type = 'figure' AND post_name = '%s' AND post_status = 'publish'", $name);
+        return $wpdb->get_row($sql);
+    }
+
+    static function list_figure_names() {
+        global $wpdb;
+        return $wpdb->get_col("SELECT post_name FROM $wpdb->posts WHERE post_type = 'figure'");
     }
 
     function render_figure_copyright($attr, $content)
@@ -132,6 +138,33 @@ class Mbinfo {
         $img_src = $image_origin . $key;
 
         return '<section class="figure" id="section-figure"><div class="copyrighted-figure"><img src="' . $img_src .'"/><h3>Summary</h3><table cellpadding="2" class="figure-table"><tbody><tr><td>Title</td><td name="title">' . $title . '</td></tr><tr><td>Description</td><td name="description">' . $content . '</td></tr><tr><td>Date</td><td name="created">' . $created . '</td></tr><tr><td>Permission</td><td>' . $copying . '</td></tr></tbody></table><div class="citation-box"><details><summary>How to cite this page?</summary><div class="citation"><span class="author">MBInfo contributors.</span> <span class="title">Adherens junctions of hepatocytes. </span>In <span class="journal-title">MBInfo Wiki</span>, Retrieved 10/21/2014 from http://www.mechanobio.info/figure/figure/1384242402205.jpg.html</div></details></div></div></section>';
+    }
+
+
+    /**
+     * Insert figure page from GCS object.
+     * @param $item GCS Object.
+     * @return string return post id. empty string if fail.
+     */
+    static public function insert_figure_from_gcs($item) {
+        $meta = $item->getMetadata();
+        $name = Mbinfo_GcsObject::idFromName($item['name']);
+        $post = [
+            'post_content' => $meta['description'],
+            'post_name' => $name,
+            'post_title' => $meta['title'],
+            'post_status' => 'publish',
+            'post_type' => 'figure'
+        ];
+        $id = wp_insert_post($post, true);
+        if (is_wp_error($id)) {
+            var_dump($id);
+            return '';
+        } else {
+            update_post_meta( $id, '_my_meta_value_key', $my_data );
+        }
+        return $id;
+
     }
 
     function check_item_in_db($item, $options) {

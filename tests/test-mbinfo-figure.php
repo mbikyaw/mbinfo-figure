@@ -7,8 +7,8 @@
  */
 
 
-require_once dirname( __FILE__ ) . '/../GcsObject.php';
-require_once dirname( __FILE__ ) . '/../mbinfo.php';
+require_once dirname(__FILE__) . '/../GcsObject.php';
+require_once dirname(__FILE__) . '/../mbinfo.php';
 
 class MBInfoFigureTest extends \PHPUnit_Framework_TestCase
 {

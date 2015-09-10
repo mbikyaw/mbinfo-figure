@@ -6,7 +6,7 @@
  * Time: 11:58 AM
  */
 
-require_once 'external/google-api-php-client/src/Google/autoload.php';
+require_once __DIR__ . '/../external/google-api-php-client/src/Google/autoload.php';
 
 class Mbinfo_GcsObject
 {

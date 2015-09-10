@@ -12,7 +12,7 @@ require_once 'GcsObject.php';
 require_once 'mbinfo.php';
 
 global $MBINFO_TEST_DATA;
-$json = file_get_contents(__DIR__ . "/credentials.json");
+$json = file_get_contents(__DIR__ . "/../credentials.json");
 $MBINFO_TEST_DATA = json_decode($json);
 
 
@@ -36,22 +36,38 @@ class MbinfoFigureCliRunner extends WP_CLI_Command
         $items = $out['items'];
         $cnt = count($items);
         $bucket = Mbinfo_GcsObject::BUCKET;
+        $ids = array_map(function($item) {
+            return Mbinfo_GcsObject::idFromName($item['name']);
+        }, $items);
         WP_CLI::line( "$cnt images in GCS bucket $bucket" );
-        $mbinfo = new Mbinfo();
+
         $error = 0;
         $count = 0;
+        $no_img = 0;
         foreach($items as $item) {
-            $ok = $mbinfo->check_item_in_db($item, []);
-            if ($ok == 'ok') {
+            $fig_name = Mbinfo_GcsObject::idFromName($item['name']);
+            $fig = Mbinfo::get_figure($fig_name);
+            if ($fig) {
                 $count++;
             } else {
-                WP_CLI::line( "Figure " . $item['name'] . ' ' . $ok);
+                WP_CLI::line( "Figure for GCS object " . $item['name'] . ' missing.');
                 $error++;
             }
         }
 
+        $fig_names = Mbinfo::list_figure_names();
+        foreach ($fig_names as $name) {
+            if (! in_array($name, $ids)) {
+                WP_CLI::line( "Figure " . $name . ' does not have image in GCS.');
+                $no_img++;
+            }
+        }
+
         if ($error > 0) {
-            WP_CLI::line( $error . ' not in figure pages.');
+            WP_CLI::line( $error . ' images not in figure pages.');
+        }
+        if ($no_img > 0) {
+            WP_CLI::line( $no_img . ' invalid figure pages.');
         }
         WP_CLI::success( "Done!" );
     }
@@ -85,14 +101,16 @@ class MbinfoFigureCliRunner extends WP_CLI_Command
         $count = 0;
         $created = 0;
         foreach($items as $item) {
-            $ok = $mbinfo->check_item_in_db($item, ['create' => true]);
-            if ($ok == 'created') {
-                $created++;
-            } else if ($ok == 'ok') {
-                $count++;
-            } else {
-                WP_CLI::line( "Figure " . $item['name'] . ' ' . $ok);
-                $error++;
+            $fig_name = Mbinfo_GcsObject::idFromName($item['name']);
+            $fig = Mbinfo::get_figure($fig_name);
+            if (empty($fig)) {
+                $fig_id = Mbinfo::insert_figure_from_gcs($item);
+                if (empty($fig_id)) {
+                    WP_CLI::line( "Inserting Figure " . $fig_name. ' fail.');
+                    $error++;
+                } else {
+                    $created++;
+                }
             }
         }
         if ($created > 0) {
@@ -161,6 +179,4 @@ class MbinfoFigureCliRunner extends WP_CLI_Command
 }
 
 
-
-
-WP_CLI::add_command( 'mbi-figure', 'MbinfoFigureCliRunner' );
+WP_CLI::add_command( 'mbinfo-figure', 'MbinfoFigureCliRunner' );
