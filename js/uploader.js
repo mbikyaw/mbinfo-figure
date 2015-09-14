@@ -101,13 +101,16 @@
      */
     function handleAuthResult(authResult) {
         var authorizeButton = document.getElementById('authorize-button');
+        var input = document.getElementById('filePicker');
         if (authResult && !authResult.error) {
             authorizeButton.style.display = 'none';
+            input.style.display = '';
             initializeApi();
             var filePicker = document.getElementById('filePicker');
             filePicker.onchange = insertObject;
         } else {
             authorizeButton.style.display = '';
+            input.style.display = 'none';
             authorizeButton.onclick = handleAuthClick;
         }
     }
@@ -116,6 +119,7 @@
      * Handle authorization click event.
      */
     function handleAuthClick(event) {
+        event.preventDefault();
         gapi.auth.authorize({
             client_id: clientId,
             scope: scopes,
@@ -142,14 +146,17 @@
         gapi.client.setApiKey(apiKey);
 
         var root = document.getElementById('uploader-root') || document.body;
-        var btn = document.createElement('button');
+        var btn = document.createElement('a');
         btn.id = 'authorize-button';
-        btn.style.display = 'hidden';
-        btn.textContent = 'Authorize';
+        btn.style.display = 'none';
+        btn.textContent = 'Update';
+        btn.style.cursor = 'pointer';
         root.appendChild(btn);
         var input = document.createElement('input');
         input.type = 'file';
         input.id = 'filePicker';
+        input.style.width = 'auto';
+        input.style.display = 'none';
         input.setAttribute('accept', '.jpg');
         root.appendChild(input);
         var div = document.createElement('span');

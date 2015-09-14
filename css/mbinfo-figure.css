@@ -52,3 +52,7 @@ section.figure {
     font-size: 13px;
     line-height: 1.428571429;
 }
+
+.citation-box {
+    padding: 16px 0;
+}

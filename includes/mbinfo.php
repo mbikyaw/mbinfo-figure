@@ -122,11 +122,11 @@ class Mbinfo {
     function render_figure_copyright($attr, $content)
     {
         $copying = 'Modification, copying and distribution (commercial or non-commercial) of this image is strictly prohibited without written consent. Please contact MBInfo at <b>feedback@mechanobio.info</b> to request permission to use this image.';
-        $title = 'Adherens junctions of hepatocytes';
+        $title = $attr['title'];
 
         $created = $attr['created'];
 
-        $id = $attr['id'];
+        $id = $attr['name'];
         $has_ext = preg_match("/\.\w{2,4}$/", $id);
         if (!$has_ext) {
             $id = $id . '.jpg';
@@ -136,12 +136,13 @@ class Mbinfo {
         $key = $prefix . $id;
         $image_origin = '//' . $bucket . '.storage.googleapis.com';
         $img_src = $image_origin . $key;
+        $url = 'http://mbinfo.mbi.nus.edu.sg/figure/' . $attr['name'] . '/';
 
         return '<section class="figure" id="section-figure"><div class="copyrighted-figure"><img src="' . $img_src .'"/><h3>Summary</h3><table cellpadding="2" class="figure-table"><tbody><tr><td>Title</td><td name="title">' . $title . '</td></tr>
         <tr><td>Description</td><td name="description">' . $content . '</td></tr>
         <tr><td>Date</td><td name="created">' . $created . '</td></tr>
         <tr><td>Permission</td><td>' . $copying . '</td>
-        </tr></tbody></table><div class="citation-box"><details><summary>How to cite this page?</summary><div class="citation"><span class="author">MBInfo contributors.</span> <span class="title">Adherens junctions of hepatocytes. </span>In <span class="journal-title">MBInfo Wiki</span>, Retrieved 10/21/2014 from http://www.mechanobio.info/figure/figure/1384242402205.jpg.html</div></details></div></div></section>';
+        </tr></tbody></table><div class="citation-box"><details><summary>How to cite this page?</summary><div class="citation"><span class="author">MBInfo contributors.</span> <span class="title">' . $title . '. </span>In <span class="journal-title">MBInfo Wiki</span>, Retrieved 10/21/2014 from ' . $url . '</div></details></div></div></section>';
     }
 
 
