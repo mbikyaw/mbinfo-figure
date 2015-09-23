@@ -34,9 +34,8 @@ function mbinfo_figure_install() {
     global $mbinfo_figure_db_version;
     $mbinfo = new Mbinfo();
     $existing = get_site_option( 'mbinfo_figure_db_version' );
-    error_log('MBInfoFigure: running mbinfo_figure_install ' . $existing . ' to ' . $mbinfo_figure_db_version);
+    // error_log('MBInfoFigure: running mbinfo_figure_install ' . $existing . ' to ' . $mbinfo_figure_db_version);
 
-    populate_data();
 }
 
 
