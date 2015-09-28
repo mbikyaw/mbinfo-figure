@@ -2,6 +2,8 @@
 
 This is a WordPress plugin for MBInfo (http://www.mechabibio.info) web site for inserting inline figure box, generating watermark copy right figure page, listing figures and uploading and serving from Google Cloud Storage bucket.
 
+![Figure box](https://mbi-data.storage.googleapis.com/misc/figure-box.tiff)
+
 ## Using 
 
 Use WordPress shortcode `mbinfo-figure` to display figure in box.
