@@ -69,3 +69,7 @@ TABLE.figure-list TR {
     vertical-align: top;
 }
 
+.figure-list .summary {
+    font-size: 90%;
+    line-height: 1.2;
+}

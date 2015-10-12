@@ -110,7 +110,7 @@ class Mbinfo {
      */
     static function get_figure($name) {
         global $wpdb;
-        $sql = $wpdb->prepare("SELECT * FROM $wpdb->posts WHERE post_type = 'figure' AND post_name = '%s' AND post_status = 'publish' LIMIT %d OFFSET %d", $name);
+        $sql = $wpdb->prepare("SELECT * FROM $wpdb->posts WHERE post_type = 'figure' AND post_name = '%s' AND post_status = 'publish'", $name);
         return $wpdb->get_row($sql);
     }
 
@@ -121,7 +121,7 @@ class Mbinfo {
      * @param int $offset offset
      * @return array
      */
-    static function list_figure($limit = 1000, $offset = 0) {
+    static function list_figure($limit = 500, $offset = 0) {
         global $wpdb;
         $sql = $wpdb->prepare("SELECT * FROM $wpdb->posts WHERE post_type = 'figure' AND post_status = 'publish' LIMIT %d OFFSET %d", $limit, $offset);
         return $wpdb->get_results($sql, ARRAY_A);
@@ -132,29 +132,24 @@ class Mbinfo {
         return $wpdb->get_col("SELECT post_name FROM $wpdb->posts WHERE post_type = 'figure'");
     }
 
-<<<<<<< HEAD
-    function get_img_src($id) {
-=======
-    function render_figure_copyright($attr, $content)
-    {
-        $copying = 'Modification, copying and distribution (commercial or non-commercial) of this image is strictly prohibited without written consent. Please contact MBInfo at <b>feedback@mechanobio.info</b> to request permission to use this image.';
-        $title = $attr['title'];
-
-        $created = $attr['created'];
-
-        $id = $attr['name'];
->>>>>>> 2c2032f7677d38f007634670a49efe8092d861fd
-        $has_ext = preg_match("/\.\w{2,4}$/", $id);
+    function get_img_src($name) {
+        $has_ext = preg_match("/\.\w{2,4}$/", $name);
         if (!$has_ext) {
-            $id = $id . '.jpg';
+            $name = $name . '.jpg';
         }
         $bucket = Mbinfo_GcsObject::BUCKET;
         $prefix = '/figure/';
-        $key = $prefix . $id;
+        $key = $prefix . $name;
         $image_origin = '//' . $bucket . '.storage.googleapis.com';
         $img_src = $image_origin . $key;
-<<<<<<< HEAD
         return $img_src;
+    }
+    
+    function list_referred_page($name) {
+        global $wpdb;
+        $src = 'figure-box name="' . $name . '"';
+        $sql = $wpdb->prepare("SELECT ID, post_title FROM $wpdb->posts WHERE post_type = 'page' AND post_status = 'publish' AND post_content REGEXP '%s' ", $src);
+        return $wpdb->get_results($sql, ARRAY_A);
     }
 
     function render_figure_copyright($attr, $content)
@@ -164,13 +159,17 @@ class Mbinfo {
 
         $created = $attr['created'];
         $img_src = $this->get_img_src($attr['name']);
-=======
->>>>>>> 2c2032f7677d38f007634670a49efe8092d861fd
         $url = 'http://mbinfo.mbi.nus.edu.sg/figure/' . $attr['name'] . '/';
+        $ref = $this->list_referred_page($attr['name']);
+        $ref_s = '';
+        foreach ($ref as $r) {
+            $ref_s .= '<a href="/?page_id=' . $r['ID'] . '">' . $r['post_title'] . '</a>';
+        }
 
         return '<section class="figure" id="section-figure"><div class="copyrighted-figure"><img src="' . $img_src .'"/><h3>Summary</h3><table cellpadding="2" class="figure-table"><tbody><tr><td>Title</td><td name="title">' . $title . '</td></tr>
         <tr><td>Description</td><td name="description">' . $content . '</td></tr>
         <tr><td>Date</td><td name="created">' . $created . '</td></tr>
+        <tr><td>Referred pages</td><td name="referred">' . $ref_s . '</td></tr>
         <tr><td>Permission</td><td>' . $copying . '</td>
         </tr></tbody></table><div class="citation-box"><details><summary>How to cite this page?</summary><div class="citation"><span class="author">MBInfo contributors.</span> <span class="title">' . $title . '. </span>In <span class="journal-title">MBInfo Wiki</span>, Retrieved 10/21/2014 from ' . $url . '</div></details></div></div></section>';
     }

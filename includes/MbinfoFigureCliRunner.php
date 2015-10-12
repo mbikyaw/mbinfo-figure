@@ -124,6 +124,43 @@ class MbinfoFigureCliRunner extends WP_CLI_Command
 
 
     /**
+     * Query info.
+     *
+     * ## OPTIONS
+     *
+     * <figure>
+     * : Figure page slug.
+     *
+     * ## EXAMPLES
+     *
+     *     wp mbinfo-figure info referred --figure=12232
+     *
+     * @synopsis <method> [--figure]
+     */
+    function info( $args, $assoc_args ) {
+        $mth = $args[0];
+        if ($mth == 'referred') {
+            $figure = $assoc_args['figure'];
+            if (empty($figure)) {
+                WP_CLI::error( "figure required.");
+                return;
+            }
+            $mbinfo = new Mbinfo();
+            $fig = $mbinfo->get_figure($figure);
+            if (empty($fig)) {
+                WP_CLI::error( "figure " . $figure . " not found.");
+                return;
+            }
+            $list = $mbinfo->list_referred_page($figure);
+            var_dump($list);
+            WP_CLI::success(count($list) . " referred pages found for " . $fig->post_title);
+        } else {
+            WP_CLI::error( "unknown method ");
+        }
+    }
+
+
+    /**
      * Clean figure pages.
      *
      * ## OPTIONS
