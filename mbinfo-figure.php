@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: MBInfo Figure
- * Plugin URI: http://example.com/wordpress-plugins/my-plugin
+ * Plugin URI: https://github.com/mbikyaw/mbinfo-figure
  * Description: Create a figure content box in the text.
  * Version: 1.1
  * Author: Kyaw Tun
- * Author URI: http://mbinfo.mbi.nus.edu.sg
+ * Author URI: https://github.com/mbikyaw/
  * License: MIT
  */
 

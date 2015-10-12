@@ -3,14 +3,11 @@
     border: 1px solid #028490;
     padding: 5px;
     margin: 12px 0;
-    background-color: #E0F5F3;
     font-size: 80%;
     line-height: normal;
 }
 
 .figure-img {
-    border: 1px solid #E0F5F3;
-    background-color: #ffffff;
     padding: 3px;
 }
 
@@ -19,7 +16,6 @@
 }
 
 table.figure-table {
-    background: #E0F5F3;
     border: thin solid grey;
     padding: 4px;
     display: table;
@@ -51,4 +47,23 @@ section.figure {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 13px;
     line-height: 1.428571429;
+}
+
+.citation-box {
+    padding: 16px 0;
+}
+
+TABLE.figure-list {
+    border: medium solid black;
+    margin: 16px 0;
+}
+
+TABLE.figure-list TD {
+    padding: 8px;
+}
+
+
+TABLE.figure-list TR {
+    border-bottom: thin solid grey;
+    vertical-align: top;
 }
