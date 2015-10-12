@@ -53,6 +53,7 @@ section.figure {
     padding: 16px 0;
 }
 
+
 TABLE.figure-list {
     border: medium solid black;
     margin: 16px 0;
@@ -67,3 +68,4 @@ TABLE.figure-list TR {
     border-bottom: thin solid grey;
     vertical-align: top;
 }
+

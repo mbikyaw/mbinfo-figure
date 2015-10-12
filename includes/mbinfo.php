@@ -132,7 +132,18 @@ class Mbinfo {
         return $wpdb->get_col("SELECT post_name FROM $wpdb->posts WHERE post_type = 'figure'");
     }
 
+<<<<<<< HEAD
     function get_img_src($id) {
+=======
+    function render_figure_copyright($attr, $content)
+    {
+        $copying = 'Modification, copying and distribution (commercial or non-commercial) of this image is strictly prohibited without written consent. Please contact MBInfo at <b>feedback@mechanobio.info</b> to request permission to use this image.';
+        $title = $attr['title'];
+
+        $created = $attr['created'];
+
+        $id = $attr['name'];
+>>>>>>> 2c2032f7677d38f007634670a49efe8092d861fd
         $has_ext = preg_match("/\.\w{2,4}$/", $id);
         if (!$has_ext) {
             $id = $id . '.jpg';
@@ -142,6 +153,7 @@ class Mbinfo {
         $key = $prefix . $id;
         $image_origin = '//' . $bucket . '.storage.googleapis.com';
         $img_src = $image_origin . $key;
+<<<<<<< HEAD
         return $img_src;
     }
 
@@ -152,6 +164,8 @@ class Mbinfo {
 
         $created = $attr['created'];
         $img_src = $this->get_img_src($attr['name']);
+=======
+>>>>>>> 2c2032f7677d38f007634670a49efe8092d861fd
         $url = 'http://mbinfo.mbi.nus.edu.sg/figure/' . $attr['name'] . '/';
 
         return '<section class="figure" id="section-figure"><div class="copyrighted-figure"><img src="' . $img_src .'"/><h3>Summary</h3><table cellpadding="2" class="figure-table"><tbody><tr><td>Title</td><td name="title">' . $title . '</td></tr>
